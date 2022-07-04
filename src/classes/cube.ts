@@ -28,9 +28,5 @@ export class Cube {
             .repeat(Infinity)
             .easing(TWEEN.Easing.Cubic.InOut)
             .start();
-    }
- 
-    
-    
-
+    }   
 }

@@ -1,4 +1,4 @@
-import * as TWEEN  from '@tweenjs/tween.js'
+import * as TWEEN from '@tweenjs/tween.js'
 
 import { Grid } from './grid';
 import * as THREE from 'three';
@@ -20,11 +20,11 @@ export class Stage {
 
     initRenderer(): void {
         this.scene = new THREE.Scene();
-		this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-		this.renderer = new THREE.WebGLRenderer();
+        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        this.renderer = new THREE.WebGLRenderer({ antialias: true });
 
-		this.renderer.setSize(window.innerWidth, window.innerHeight);
-		document.body.appendChild(this.renderer.domElement);
+        this.renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(this.renderer.domElement);
 
         this.camera.position.z = 5;
 
@@ -43,12 +43,16 @@ export class Stage {
 
     justToTest() { //TO REMOVE : just to check first display
         this.scene.add(new Cube(this.scene).root);
+        this.grid.lines.forEach(l =>
+            this.scene.add(l.root)
+        )
+        // this.scene.add(this.grid.lines.map(l => l.root))
     }
 
 
     render = () => {
         requestAnimationFrame(this.render);
-		this.renderer.render(this.scene, this.camera);
-		TWEEN.update();
+        this.renderer.render(this.scene, this.camera);
+        TWEEN.update();
     }
 }
