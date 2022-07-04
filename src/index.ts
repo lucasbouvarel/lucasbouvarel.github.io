@@ -1,9 +1,12 @@
-import { Grid } from './classes/grid';
-import { Stage } from './classes/stage';
+import $ from 'jquery';
+import { CsvParser } from './classes/csv-parser';
 
-async function bootstrap(): Promise<void> {
-    const stage = new Stage(new Grid());
-    stage.render();
-}
+$<HTMLInputElement>(':file').on('change', function () {
+    if (!this.files?.length) {
+        return;
+    }
 
-bootstrap();
+    var file = this.files[0];
+
+    CsvParser.parse(file.stream()).then((lines) => console.log(lines));
+});
