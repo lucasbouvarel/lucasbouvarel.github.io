@@ -15,8 +15,8 @@ export class Grid {
         const columnPoints: Point[][] = [];
         for (let count = 0; count < this.divisions; count++) {
             const offset = (this.size / this.divisions) * count;
-            rowPoints[count] = [new Point(-1000, offset, 0), new Point(1000, offset, 0)]
-            columnPoints[count] = [new Point(offset, -1000, 0), new Point(offset, 1000, 0)]
+            rowPoints[count] = [new Point(-1000, 0, offset), new Point(1000, 0, offset)]
+            columnPoints[count] = [new Point(offset, 0, -1000), new Point(offset, 0, 1000)]
         }
 
         rowPoints.forEach(coordinates => {
