@@ -1,7 +1,9 @@
-import $ from 'jquery';
+import { Grid } from './classes/grid';
+import { Stage } from './classes/stage';
 
 async function bootstrap(): Promise<void> {
-    $('#hw').html('Hello World !');
+    const stage = new Stage(new Grid());
+    stage.render();
 }
 
 bootstrap();
