@@ -13,10 +13,11 @@ export class Grid {
     private createLines(): void {
         const rowPoints: Point[][] = [];
         const columnPoints: Point[][] = [];
+        const halfSize = this.size/2;
         for (let count = 0; count < this.divisions; count++) {
-            const offset = (this.size / this.divisions) * count;
-            rowPoints[count] = [new Point(-1000, 0, offset), new Point(1000, 0, offset)]
-            columnPoints[count] = [new Point(offset, 0, -1000), new Point(offset, 0, 1000)]
+            const offset = ((this.size / this.divisions) * count) - halfSize;
+            rowPoints[count] = [new Point(-halfSize, 0, offset), new Point(halfSize, 0, offset)]
+            columnPoints[count] = [new Point(offset, 0, -halfSize), new Point(offset, 0, halfSize)]
         }
 
         rowPoints.forEach(coordinates => {
@@ -30,11 +31,5 @@ export class Grid {
 
     public get lines(): Line[] {
         return [...this.horizontalLines, ...this.verticalLines]
-    }
-
-    public render(scene: THREE.Scene) {
-        for (const line of this.lines) {
-            line.render(scene);
-        }
     }
 }

@@ -18,7 +18,7 @@ $<HTMLInputElement>(':file').on('change', function () {
 
 async function bootstrap(): Promise<void> {
     const dougsCraft = new DougsCraft();
-    const stage = new Stage(new Grid(1000, 200), dougsCraft);
+    const stage = new Stage(new Grid(500, 120), dougsCraft);
     stage.render();
 }
 
