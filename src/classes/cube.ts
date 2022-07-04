@@ -15,7 +15,7 @@ export class Cube {
     size!: number;
     autoAnim = false;
 
-    constructor(private readonly scene: THREE.Scene, enableDemo = true) {
+    constructor(enableDemo = true) {
         this.root = new THREE.Object3D(); 
         this.material = new THREE.MeshStandardMaterial({ color: Cube.getRandomColor(), metalness: 0.6 });
         const geometry = new THREE.BoxGeometry(Cube.defaultSize, Cube.defaultSize, Cube.defaultSize);
@@ -24,12 +24,9 @@ export class Cube {
         this.root.add(cube);
 
         this.size = Cube.defaultSize;
-
-        scene.add(this.root);
-
         
         if (enableDemo) {
-            this.startRotation();
+            //this.startRotation();
             this.autoAnim = enableDemo;
             this.setSize(2, true, 250);
         }

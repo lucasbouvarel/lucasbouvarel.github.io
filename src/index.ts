@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import { CsvParser } from './classes/csv-parser';
+import { DougsCraft } from './classes/dougsCraft';
 import { Grid } from './classes/grid';
 import { Stage } from './classes/stage';
 
@@ -16,7 +17,8 @@ $<HTMLInputElement>(':file').on('change', function () {
 });
 
 async function bootstrap(): Promise<void> {
-    const stage = new Stage(new Grid(1000, 200));
+    const dougsCraft = new DougsCraft();
+    const stage = new Stage(new Grid(1000, 200), dougsCraft);
     stage.render();
 }
 

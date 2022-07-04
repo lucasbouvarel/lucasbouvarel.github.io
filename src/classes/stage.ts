@@ -3,6 +3,7 @@ import { OrbitControls } from 'three-orbitcontrols-ts';
 import { Grid } from './grid';
 import * as THREE from 'three';
 import { Cube } from './cube';
+import { DougsCraft } from './dougsCraft';
 
 
 
@@ -13,11 +14,13 @@ export class Stage {
     camera!: THREE.PerspectiveCamera;
     controls!: OrbitControls;
 
-    cubePivot!: THREE.Object3D;
-
-    constructor(private readonly grid: Grid) {
+    constructor(private readonly grid: Grid, private readonly dougsCraft: DougsCraft) {
         this.initRenderer();
-        this.justToTest();
+
+        this.grid.lines.forEach(l =>
+            this.scene.add(l.root)
+        )
+        this.scene.add(dougsCraft.root);
     }
 
 
@@ -29,7 +32,7 @@ export class Stage {
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(this.renderer.domElement);
 
-        this.camera.position.set(-5, 5, -5);
+        this.camera.position.set(-7, 7, -7);
         this.controls = new OrbitControls(this.camera, this.renderer.domElement );
         this.controls.enableZoom = true; // useless for now... 
         this.controls.enableKeys = true; // same here. Need to check that.
@@ -46,14 +49,6 @@ export class Stage {
         directionalLight.castShadow = true;
         directionalLight.position.set(-3, 3, -3);
         this.scene.add(directionalLight);
-    }
-
-    justToTest() { //TO REMOVE : just to check first display
-        this.scene.add(new Cube(this.scene).root);
-        this.grid.lines.forEach(l =>
-            this.scene.add(l.root)
-        )
-        // this.scene.add(this.grid.lines.map(l => l.root))
     }
 
 
