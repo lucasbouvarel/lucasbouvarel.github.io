@@ -23,10 +23,9 @@ export class DougsCraft {
 
     constructor() {
         this.root = new THREE.Object3D(); 
-        this.root.rotation.y = -Math.PI / 4;
+        this.root.rotation.y = 5 * Math.PI / 4;
         this.initGrid();
         this.setDisplayType(CraftDisplayType.Wtf);
-        //this.initTexts(this.root);
     }
 
     private initGrid() {
@@ -52,10 +51,10 @@ export class DougsCraft {
             this.fullGrid.push(line);
             for (let j = 0; j < DougsCraft.gridHeight; j++) {
 
-                const isYear = (j > 12 && j <= 65 && i > 34 && i <= 41);
+                const isYear = (i > 12 && i <= 65 && j > 34 && j <= 41);
 
 
-                const cube = new Cube(isYear, this, isYear);
+                const cube = new Cube(this, isYear);
                 this.gridRoot.add(cube.root);
                 line.push(cube);
 
@@ -75,50 +74,74 @@ export class DougsCraft {
         }
     }
 
+    public switchDisplayType(): void {
+        this.setDisplayType(
+            this.displayType === CraftDisplayType.Wtf 
+                ? CraftDisplayType.Year 
+                : CraftDisplayType.Wtf
+        );
+    }
+
     public setDisplayType(type: CraftDisplayType) {
         if (this.displayType === type) return;
 
-        
+        this.displayType = type;
+        this.stopAllCubeTweens();
 
+        this.resetAllCubes(() => {
+            if (Cube.hasActiveTweens()) return; //totally weirdiest thing on earth
+            this.startCurrentDisplayType();
+        });
     }
-
 
     public getDisplayType(): CraftDisplayType {
         return this.displayType;
     }
 
-/*
-    private initTexts(root: THREE.Object3D) {
-        const loader = new FontLoader();
-        loader.load('assets/fonts/helvetiker_regular.typeface.json', function (font) {
-
-            const textLine = new THREE.Object3D();
-            root.add(textLine);
-            textLine.position.set(0, 1, -3.5);
-
-            const textMessages = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
-
-            const textSizes = [0.2];
-
-            for (let i = 0; i < textMessages.length; i++) {
-                const textsShapes = font.generateShapes( textMessages[i], textSizes[i] );
-                const textsGeometry = new THREE.ShapeBufferGeometry( textsShapes );    
-                const textsMaterial = new THREE.MeshBasicMaterial({color: 0xeeeeee});
-
-                const text = new THREE.Mesh(textsGeometry, textsMaterial);
-                text.position.set(-DougsCraft.gridWidth / 2 + 0.5 + i, 0, 0);
-                text.name = textMessages[i]; 
-
-                console.log("ADD TEXT");
-                textLine.add(text);
-            }
-
-}); 
+    private stopAllCubeTweens(): void {
+        this.fullGrid.forEach(line => line.forEach(cube => {
+            cube.stopWtfMode();
+            cube.killCurrentTween();
+        }));
     }
-*/
+
+    private resetAllCubes(onEnd?: () => void): void {
+        let found = false;
+        this.fullGrid.forEach(line => line.forEach(cube => found = cube.setSize(Cube.disabledSize, true, Math.random() * 6, onEnd) || found));
+        if (!found && onEnd != null) {
+            onEnd();
+        }
+    }
+
+    private startCurrentDisplayType(): void { 
+        switch(this.displayType) {
+            case CraftDisplayType.Wtf: 
+                this.fullGrid.forEach(line => line.forEach(cube => cube.startWtfMode()));
+                break;
+            case CraftDisplayType.Year:
+                this.displayYearDatas();
+                break;
+        }
+    }
 
     public setData(data: any) { 
         //TODO
     }
+
+    displayYearDatas() {
+        //####################### TODO : SET REAL YEAR DATAS HERE
+
+        if (this.displayType !== CraftDisplayType.Year) return;
+
+        let delay = 100;
+        const deltaDelay = 6 + Math.random() * 4;
+        this.yearGrid.forEach(cube => {
+            delay += deltaDelay;
+            cube.setSize(Cube.getRandomSize(), true, delay);
+        });
+        //#######################
+
+    }
+    
 
 }

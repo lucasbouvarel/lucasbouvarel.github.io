@@ -21,6 +21,8 @@ export class Stage {
             this.scene.add(l.root)
         )
         this.scene.add(dougsCraft.root);
+
+        this.initControls();
     }
 
 
@@ -37,20 +39,29 @@ export class Stage {
         this.camera.lookAt(0, 1, 0);
         this.controls = new OrbitControls(this.camera, this.renderer.domElement );
         this.controls.autoRotate = true;
-        this.controls.autoRotateSpeed = 0.4;
+        this.controls.autoRotateSpeed = 0.3;
         this.controls.update();
 
         this.initLights();
     }
 
     initLights(): void {
-        const light = new THREE.AmbientLight(0x404040, 3); // soft white light
+        const light = new THREE.AmbientLight(0x404040, 3);
         this.scene.add(light);
 
         const directionalLight = new THREE.DirectionalLight(0x52C8F2, 2.8);
         directionalLight.castShadow = true;
         directionalLight.position.set(-3, 3, -3);
         this.scene.add(directionalLight);
+    }
+
+
+    initControls() {
+        document.addEventListener('keydown', (event) => {
+            //console.log('code : ' + event.code);
+            if (event.code === 'Space')
+                this.dougsCraft.switchDisplayType();
+        }, false);
     }
 
 

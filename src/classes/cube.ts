@@ -11,7 +11,7 @@ export class Cube {
     static ACTIVE_TWEENS: TWEEN.Tween<any>[] = []; //ultra weird but tweenjs haven't got group controllers... 
 
     static defaultSize = 0.9;
-    static disabledtSize = 0.1;
+    static disabledSize = 0.1;
 
     root!: THREE.Object3D;
     material!: THREE.MeshStandardMaterial;
@@ -29,7 +29,7 @@ export class Cube {
         cube.position.set(0, Cube.defaultSize / 2, 0);
         this.root.add(cube);
 
-        this.setSize(Cube.disabledtSize, false);
+        this.setSize(Cube.disabledSize, false);
         
         /*
         if (enableDemo) {
@@ -55,24 +55,36 @@ export class Cube {
         this.root.position.set(x, y, z);
     }
 
+    public startWtfMode() {
+        this.killCurrentTween();
+        this.autoAnim = true;
+        this.setSize(2, true, 400);
+    }
 
-    public setSize(size: number, withAnim = true, withDelay = 0, onEnd?: () => void) {
+    public stopWtfMode() {
+        this.autoAnim = false;
+    }
+
+    public setSize(size: number, withAnim = true, withDelay = 0, onEnd?: () => void): boolean {
         this.size = size;
         if (!withAnim) {
             this.root.scale.y = this.size;
+            return true;
         } else {
-            this.animSize(withDelay, onEnd);
+            return this.animSize(withDelay, onEnd);
         }
     }
 
 
-    private animSize(withDelay = 0, onEnd?: () => void): void {
+    private animSize(withDelay = 0, onEnd?: () => void): boolean {
         this.killCurrentTween();
-        if (this.root.scale.y === this.size) return; //nothing to do
+        if (this.root.scale.y === this.size) return false; //nothing to do
 
         const isUp = this.root.scale.y < this.size;
-        const minDuration = 1200;
-        const deltaDuration = 1800;
+        const minDuration = (this.autoAnim) ? 1200 : 800;
+        const deltaDuration = (this.size === Cube.disabledSize) ? 100 : 1800;
+
+
         
         this.currentTween = new TWEEN.Tween(this.root.scale)
         .to({ y: this.size }, minDuration + Math.random() * deltaDuration)
@@ -88,9 +100,10 @@ export class Cube {
                 this.setSize(Cube.getRandomSize(), true, 300 + Math.random() * 500);
         });
         Cube.addToActiveTweens(this.currentTween);
+        return true;
     }
 
-    private killCurrentTween(): void {
+    public killCurrentTween(): void {
         if (!this.currentTween) return;
         this.currentTween.stop();
         Cube.removeFromActiveTweens(this.currentTween);
@@ -128,6 +141,7 @@ export class Cube {
             Cube.ACTIVE_TWEENS.splice(index, 1);
         }
     }
+
 
 
     
