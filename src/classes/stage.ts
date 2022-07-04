@@ -1,5 +1,5 @@
 import * as TWEEN from '@tweenjs/tween.js'
-import { OrbitControls } from 'three-orbitcontrols-ts';
+import { OrbitControls } from '@three-ts/orbit-controls';
 import { Grid } from './grid';
 import * as THREE from 'three';
 import { Cube } from './cube';
@@ -32,11 +32,13 @@ export class Stage {
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(this.renderer.domElement);
 
-        this.camera.position.set(-7, 7, -7);
+        //this.camera.position.set(-7, 7, -7);
+        this.camera.position.set(-1, 20, -1);
+        this.camera.lookAt(0, 1, 0);
         this.controls = new OrbitControls(this.camera, this.renderer.domElement );
-        this.controls.enableZoom = true; // useless for now... 
-        this.controls.enableKeys = true; // same here. Need to check that.
         this.controls.autoRotate = true;
+        this.controls.autoRotateSpeed = 0.4;
+        this.controls.update();
 
         this.initLights();
     }
@@ -45,7 +47,7 @@ export class Stage {
         const light = new THREE.AmbientLight(0x404040, 3); // soft white light
         this.scene.add(light);
 
-        const directionalLight = new THREE.DirectionalLight(0x52C8F2, 2.5);
+        const directionalLight = new THREE.DirectionalLight(0x52C8F2, 2.8);
         directionalLight.castShadow = true;
         directionalLight.position.set(-3, 3, -3);
         this.scene.add(directionalLight);
