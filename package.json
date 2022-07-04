@@ -1,0 +1,13 @@
+{
+    "name": "dougs-skyline",
+    "version": "0.0.1",
+    "main": "dist/index.js",
+    "scripts": {
+        "build": "tsc",
+        "start": "node dist",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "dependencies": {
+        "typescript": "^4.7.4"
+    }
+}
