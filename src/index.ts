@@ -1,5 +1,7 @@
+import $ from 'jquery';
+
 async function bootstrap(): Promise<void> {
-    console.log('Hello World !');
+    $('#hw').html('Hello World !');
 }
 
 bootstrap();
