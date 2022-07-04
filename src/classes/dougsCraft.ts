@@ -107,7 +107,7 @@ export class DougsCraft {
 
     private resetAllCubes(onEnd?: () => void): void {
         let found = false;
-        this.fullGrid.forEach(line => line.forEach(cube => found = cube.setSize(Cube.disabledSize, true, Math.random() * 6, onEnd) || found));
+        this.fullGrid.forEach(line => line.forEach(cube => found = cube.setSize(Cube.disabledSize, true, Math.random() * 10, onEnd) || found));
         if (!found && onEnd != null) {
             onEnd();
         }

@@ -84,8 +84,6 @@ export class Cube {
         const minDuration = (this.autoAnim) ? 1200 : 800;
         const deltaDuration = (this.size === Cube.disabledSize) ? 100 : 1800;
 
-
-        
         this.currentTween = new TWEEN.Tween(this.root.scale)
         .to({ y: this.size }, minDuration + Math.random() * deltaDuration)
         .delay(withDelay)

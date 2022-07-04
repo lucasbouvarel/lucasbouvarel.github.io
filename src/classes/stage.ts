@@ -53,6 +53,12 @@ export class Stage {
         directionalLight.castShadow = true;
         directionalLight.position.set(-3, 3, -3);
         this.scene.add(directionalLight);
+
+
+        const pointLight = new THREE.PointLight( 0xD600B1, 1.1, 100 );
+        pointLight.position.set(-40, 8, 0);
+        pointLight.lookAt(0, 0, 0);
+        this.scene.add(pointLight);
     }
 
 
