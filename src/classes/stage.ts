@@ -24,7 +24,7 @@ export class Stage {
         this.grid.spheres.forEach(s =>
             this.scene.add(s.root)
         );
-        // this.scene.add(dougsCraft.root);
+        this.scene.add(dougsCraft.root);
 
         this.initControls();
     }
