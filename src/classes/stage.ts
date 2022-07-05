@@ -4,6 +4,7 @@ import { Grid } from './grid';
 import * as THREE from 'three';
 import { Cube } from './cube';
 import { CraftDisplayType, DougsCraft } from './dougsCraft';
+import { Sphere } from './sphere';
 
 
 
@@ -19,8 +20,11 @@ export class Stage {
 
         this.grid.lines.forEach(l =>
             this.scene.add(l.root)
-        )
-        this.scene.add(dougsCraft.root);
+        );
+        this.grid.spheres.forEach(s =>
+            this.scene.add(s.root)
+        );
+        // this.scene.add(dougsCraft.root);
 
         this.initControls();
     }
@@ -28,16 +32,16 @@ export class Stage {
 
     initRenderer(): void {
         this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(80, window.innerWidth / (window.innerHeight -30), 0.1, 1000);
+        this.camera = new THREE.PerspectiveCamera(80, window.innerWidth / (window.innerHeight - 30), 0.1, 1000);
         this.renderer = new THREE.WebGLRenderer({ antialias: true });
 
-        this.renderer.setSize(window.innerWidth, window.innerHeight-30);
+        this.renderer.setSize(window.innerWidth, window.innerHeight - 30);
         document.body.appendChild(this.renderer.domElement);
 
         //this.camera.position.set(-7, 7, -7);
         this.camera.position.set(-1, 20, -1);
         this.camera.lookAt(0, 1, 0);
-        this.controls = new OrbitControls(this.camera, this.renderer.domElement );
+        this.controls = new OrbitControls(this.camera, this.renderer.domElement);
         this.controls.autoRotate = true;
         this.controls.autoRotateSpeed = 0.3;
         this.controls.update();
@@ -55,7 +59,7 @@ export class Stage {
         this.scene.add(directionalLight);
 
 
-        const pointLight = new THREE.PointLight( 0xD600B1, 1.1, 100 );
+        const pointLight = new THREE.PointLight(0xD600B1, 1.1, 100);
         pointLight.position.set(-40, 8, 0);
         pointLight.lookAt(0, 0, 0);
         this.scene.add(pointLight);
@@ -69,13 +73,13 @@ export class Stage {
                 this.dougsCraft.setDisplayType(CraftDisplayType.Wtf);
             if (event.code === 'Digit1')
                 this.dougsCraft.setDisplayType(CraftDisplayType.Year_1);
-                if (event.code === 'Digit2')
+            if (event.code === 'Digit2')
                 this.dougsCraft.setDisplayType(CraftDisplayType.Year_2);
-                if (event.code === 'Digit3')
+            if (event.code === 'Digit3')
                 this.dougsCraft.setDisplayType(CraftDisplayType.Year_3);
-                if (event.code === 'Digit4')
+            if (event.code === 'Digit4')
                 this.dougsCraft.setDisplayType(CraftDisplayType.Year_4);
-                if (event.code === 'Digit5')
+            if (event.code === 'Digit5')
                 this.dougsCraft.setDisplayType(CraftDisplayType.Year_5);
             if (event.code === 'KeyR') {
                 this.controls.autoRotate = !this.controls.autoRotate;
@@ -93,9 +97,9 @@ export class Stage {
     }
 
     onWindowResize = () => {
-        this.camera.aspect = window.innerWidth / (window.innerHeight -30);
+        this.camera.aspect = window.innerWidth / (window.innerHeight - 30);
         this.camera.updateProjectionMatrix();
-    
-        this.renderer.setSize( window.innerWidth, (window.innerHeight - 30) );
+
+        this.renderer.setSize(window.innerWidth, (window.innerHeight - 30));
     }
 }
