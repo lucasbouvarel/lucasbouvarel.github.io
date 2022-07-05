@@ -2,8 +2,10 @@ import * as TWEEN from '@tweenjs/tween.js'
 import { OrbitControls } from '@three-ts/orbit-controls';
 import { Grid } from './grid';
 import * as THREE from 'three';
+import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader'
 import { CraftDisplayType, DougsCraft } from './dougsCraft';
 import { Cube, ColorSwitch } from './cube';
+import { dougsLogo } from './logo';
 
 
 export class Stage {
@@ -15,7 +17,7 @@ export class Stage {
 
     width!: number;
     height!: number;
-    
+
     //mouse selector
     selectedCube: Cube | null = null;
     raycaster!: THREE.Raycaster;
@@ -31,6 +33,7 @@ export class Stage {
             this.scene.add(s.root)
         );
         this.scene.add(dougsCraft.root);
+        this.addDougsLogo();
 
         this.initControls();
         this.initMouseSelector();
@@ -40,7 +43,7 @@ export class Stage {
     initRenderer(): void {
 
         this.width = window.innerWidth;
-        this.height = window.innerHeight -30;
+        this.height = window.innerHeight - 30;
 
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color(0x111111);
@@ -100,12 +103,12 @@ export class Stage {
     }
 
     initMouseSelector() {
-        this.raycaster =  new THREE.Raycaster();
+        this.raycaster = new THREE.Raycaster();
         this.mouse = new THREE.Vector2(1, 1);
 
         window.addEventListener('pointermove', (event) => {
-            this.mouse.x = ( event.clientX / this.width ) * 2 - 1;
-            this.mouse.y = - ( event.clientY / this.height ) * 2 + 1;
+            this.mouse.x = (event.clientX / this.width) * 2 - 1;
+            this.mouse.y = - (event.clientY / this.height) * 2 + 1;
         });
 
         window.addEventListener('pointerdown', (event) => {
@@ -116,8 +119,8 @@ export class Stage {
 
     updateMouseSelector() {
         this.raycaster.setFromCamera(this.mouse, this.camera);
-    	const intersects = this.raycaster.intersectObject(this.dougsCraft.gridRoot, true);
-    	if (intersects.length !== 0) {
+        const intersects = this.raycaster.intersectObject(this.dougsCraft.gridRoot, true);
+        if (intersects.length !== 0) {
             for (const obj of intersects) {
                 if (obj.object.name != '') {
                     this.selectCube(this.dougsCraft.getCubeByName(obj.object.name));
@@ -125,8 +128,8 @@ export class Stage {
                 }
 
             }
-            
-    	} else {
+
+        } else {
             this.unselectCube();
         }
     }
@@ -136,7 +139,7 @@ export class Stage {
         this.selectedCube = cube;
         if (cube)
             cube.setOverColor();
-         
+
     }
 
     unselectCube() {
@@ -156,11 +159,24 @@ export class Stage {
 
     onWindowResize = () => {
         this.width = window.innerWidth
-        this.height = window.innerHeight -30;
+        this.height = window.innerHeight - 30;
         this.camera.aspect = this.width / this.height;
         this.camera.updateProjectionMatrix();
 
-        this.renderer.setSize( this.width, this.height );
+        this.renderer.setSize(this.width, this.height);
+    }
+
+    addDougsLogo() {
+        const loader = new OBJLoader();
+        const mesh = loader.parse(dougsLogo);
+
+        mesh.position.set(-40, 50, -100);
+        mesh.scale.set(4, 4, 4);
+
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+
+        this.scene.add(mesh);
+
     }
 }
-
