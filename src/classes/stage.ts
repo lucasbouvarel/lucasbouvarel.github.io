@@ -2,9 +2,7 @@ import * as TWEEN from '@tweenjs/tween.js'
 import { OrbitControls } from '@three-ts/orbit-controls';
 import { Grid } from './grid';
 import * as THREE from 'three';
-import { Cube } from './cube';
 import { CraftDisplayType, DougsCraft } from './dougsCraft';
-import { Sphere } from './sphere';
 
 
 
@@ -45,6 +43,7 @@ export class Stage {
         this.height = window.innerHeight -30;
 
         this.scene = new THREE.Scene();
+        this.scene.background = new THREE.Color(0x111111);
         this.camera = new THREE.PerspectiveCamera(80, this.width / this.height, 0.1, 1000);
         this.renderer = new THREE.WebGLRenderer({ antialias: true });
 

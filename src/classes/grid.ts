@@ -35,7 +35,7 @@ export class Grid {
     }
 
     private createSpheres(): void {
-        const sphereCount = 25;
+        const sphereCount = 60;
         const allLines = this.lines;
         for (let i = 0; i < sphereCount; i++) {
             const line = allLines[Math.round(Math.random() * allLines.length)];

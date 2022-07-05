@@ -52,7 +52,7 @@ $('.upload-box').on('click', function (event) {
 
 async function bootstrap(): Promise<void> {
     dougsCraft = new DougsCraft();
-    const stage = new Stage(new Grid(500, 120), dougsCraft);
+    const stage = new Stage(new Grid(700, 140), dougsCraft);
     stage.render();
     window.addEventListener('resize', stage.onWindowResize, false);
 }
