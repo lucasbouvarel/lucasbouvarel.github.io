@@ -3,7 +3,7 @@ import { OrbitControls } from '@three-ts/orbit-controls';
 import { Grid } from './grid';
 import * as THREE from 'three';
 import { CraftDisplayType, DougsCraft } from './dougsCraft';
-
+import { Cube, ColorSwitch } from './cube';
 
 
 export class Stage {

@@ -81,7 +81,7 @@ export class DougsCraft {
                 }
 
 
-                const cube = new Cube(this, yearIndex > 0);
+                const cube = new Cube(this, yearIndex >= 0);
                 this.gridRoot.add(cube.root);
                 line.push(cube);
                 this.allCubeRoots.push(cube.root);
@@ -146,7 +146,8 @@ export class DougsCraft {
                 this.fullGrid.forEach(line => line.forEach(cube => cube.startWtfMode()));
                 break;
             default: 
-                this.displayYearDatas();
+                if (this.yearData.length)
+                    this.displayYearDatas();
                 break;
         }
     }
@@ -161,7 +162,7 @@ export class DougsCraft {
             this.yearData[maxChunk - j] = chunk;
             j++;
         }
-        this.setDisplayType(CraftDisplayType.Year_5);
+        this.setDisplayType(CraftDisplayType.Year_1);
     }
 
     private getYearGridsByDisplay(type: CraftDisplayType): Cube[][] {
@@ -176,7 +177,6 @@ export class DougsCraft {
     }
 
     private displayYearDatas() {
-        //####################### TODO : SET REAL YEAR DATAS HERE
 
         if (this.displayType === CraftDisplayType.Wtf) return;
 
@@ -186,6 +186,10 @@ export class DougsCraft {
             let delay = 100;
             const deltaDelay = 6 + Math.random() * 4;
             const yearData: any[] = this.yearData[index];
+
+            if (!yearData)
+                return;
+
             grid.forEach((cube, idx) => {
                 delay += deltaDelay;
                 let value: number = (yearData[idx]?.count && parseInt(yearData[idx].count, 10) / 100) ?? 0;
@@ -193,9 +197,9 @@ export class DougsCraft {
                     value = 15;
                 }
                 cube.setSize(value, true, delay, ColorSwitch.Year);
+                cube.setData(yearData[idx]?.count, yearData[idx]?.date_trunc);
             });
         });
-        //#######################
 
     }
     

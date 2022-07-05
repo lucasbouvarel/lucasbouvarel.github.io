@@ -35,6 +35,10 @@ export class Cube {
     y!: number;
     isSelected = false;
 
+    date!: any;
+    taskValue!: any;
+
+
     constructor(private readonly parentCraft: DougsCraft, isYearCube: boolean) {
         this.isYear = isYearCube;
         this.root = new THREE.Object3D(); 
@@ -54,9 +58,21 @@ export class Cube {
         this.y = cY;
     }
 
+
+    public setData(tasks: any, d: number): void {
+        this.taskValue = tasks;
+        this.date = d;
+    }
+
+    public resetData(): void {
+        this.taskValue = null;
+        this.date = null;
+    }
+
+
     public traceData() {
-        if (this.isYear && this.size !== Cube.disabledSize)
-            console.log('size: ' + Math.floor(this.size));
+        if (this.taskValue)
+            console.log(this.date + ' : ' + this.taskValue + ' tasks done');
     }
 
     public isActive(): boolean {
@@ -98,6 +114,9 @@ export class Cube {
 
     public setSize(size: number, withAnim = true, withDelay = 0, colorSwitch: ColorSwitch = ColorSwitch.None, onEnd?: () => void): boolean {
         this.size = size;
+        if (this.size === Cube.disabledSize)
+            this.resetData();
+
         if (!withAnim) {
             this.root.scale.y = this.size;
             this.updateColor(colorSwitch);
@@ -106,7 +125,6 @@ export class Cube {
             return this.animSize(withDelay, colorSwitch, onEnd);
         }
     }
-
 
     private animSize(withDelay = 0, colorSwitch: ColorSwitch = ColorSwitch.None, onEnd?: () => void): boolean {
         this.killCurrentTween();
