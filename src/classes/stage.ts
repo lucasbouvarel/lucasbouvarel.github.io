@@ -28,10 +28,10 @@ export class Stage {
 
     initRenderer(): void {
         this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 0.1, 1000);
+        this.camera = new THREE.PerspectiveCamera(80, window.innerWidth / (window.innerHeight -30), 0.1, 1000);
         this.renderer = new THREE.WebGLRenderer({ antialias: true });
 
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
+        this.renderer.setSize(window.innerWidth, window.innerHeight-30);
         document.body.appendChild(this.renderer.domElement);
 
         //this.camera.position.set(-7, 7, -7);
@@ -90,5 +90,12 @@ export class Stage {
         this.renderer.render(this.scene, this.camera);
         this.controls.update();
         TWEEN.update();
+    }
+
+    onWindowResize = () => {
+        this.camera.aspect = window.innerWidth / (window.innerHeight -30);
+        this.camera.updateProjectionMatrix();
+    
+        this.renderer.setSize( window.innerWidth, (window.innerHeight - 30) );
     }
 }

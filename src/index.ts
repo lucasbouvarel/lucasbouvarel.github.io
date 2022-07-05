@@ -20,6 +20,7 @@ async function bootstrap(): Promise<void> {
     const dougsCraft = new DougsCraft();
     const stage = new Stage(new Grid(500, 120), dougsCraft);
     stage.render();
+    window.addEventListener('resize', stage.onWindowResize, false);
 }
 
 bootstrap();
