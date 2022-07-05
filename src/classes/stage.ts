@@ -15,6 +15,14 @@ export class Stage {
     camera!: THREE.PerspectiveCamera;
     controls!: OrbitControls;
 
+    width!: number;
+    height!: number;
+    
+    //mouse selector
+    selectedCube: Cube | null = null;
+    raycaster!: THREE.Raycaster;
+    mouse!: THREE.Vector2;
+
     constructor(private readonly grid: Grid, private readonly dougsCraft: DougsCraft) {
         this.initRenderer();
 
@@ -27,18 +35,22 @@ export class Stage {
         this.scene.add(dougsCraft.root);
 
         this.initControls();
+        this.initMouseSelector();
     }
 
 
     initRenderer(): void {
+
+        this.width = window.innerWidth;
+        this.height = window.innerHeight -30;
+
         this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(80, window.innerWidth / (window.innerHeight - 30), 0.1, 1000);
+        this.camera = new THREE.PerspectiveCamera(80, this.width / this.height, 0.1, 1000);
         this.renderer = new THREE.WebGLRenderer({ antialias: true });
 
-        this.renderer.setSize(window.innerWidth, window.innerHeight - 30);
+        this.renderer.setSize(this.width, this.height);
         document.body.appendChild(this.renderer.domElement);
 
-        //this.camera.position.set(-7, 7, -7);
         this.camera.position.set(-1, 20, -1);
         this.camera.lookAt(0, 1, 0);
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
@@ -88,18 +100,68 @@ export class Stage {
         }, false);
     }
 
+    initMouseSelector() {
+        this.raycaster =  new THREE.Raycaster();
+        this.mouse = new THREE.Vector2(1, 1);
+
+        window.addEventListener('pointermove', (event) => {
+            this.mouse.x = ( event.clientX / this.width ) * 2 - 1;
+            this.mouse.y = - ( event.clientY / this.height ) * 2 + 1;
+        });
+
+        window.addEventListener('pointerdown', (event) => {
+            if (this.selectedCube && this.dougsCraft.getDisplayType() !== CraftDisplayType.Wtf)
+                this.selectedCube.traceData();
+        });
+    }
+
+    updateMouseSelector() {
+        this.raycaster.setFromCamera(this.mouse, this.camera);
+    	const intersects = this.raycaster.intersectObject(this.dougsCraft.gridRoot, true);
+    	if (intersects.length !== 0) {
+            for (const obj of intersects) {
+                if (obj.object.name != '') {
+                    this.selectCube(this.dougsCraft.getCubeByName(obj.object.name));
+                    break;
+                }
+
+            }
+            
+    	} else {
+            this.unselectCube();
+        }
+    }
+
+    selectCube(cube: Cube | null) {
+        this.unselectCube();
+        this.selectedCube = cube;
+        if (cube)
+            cube.setOverColor();
+         
+    }
+
+    unselectCube() {
+        if (!this.selectedCube) return;
+        this.selectedCube.restoreColor();
+        this.selectedCube = null;
+    }
+
 
     render = () => {
         requestAnimationFrame(this.render);
         this.renderer.render(this.scene, this.camera);
         this.controls.update();
+        this.updateMouseSelector();
         TWEEN.update();
     }
 
     onWindowResize = () => {
-        this.camera.aspect = window.innerWidth / (window.innerHeight - 30);
+        this.width = window.innerWidth
+        this.height = window.innerHeight -30;
+        this.camera.aspect = this.width / this.height;
         this.camera.updateProjectionMatrix();
 
-        this.renderer.setSize(window.innerWidth, (window.innerHeight - 30));
+        this.renderer.setSize( this.width, this.height );
     }
 }
+

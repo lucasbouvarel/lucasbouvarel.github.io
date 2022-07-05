@@ -21,6 +21,7 @@ export class DougsCraft {
 
     public root!: THREE.Object3D;
     public gridRoot!: THREE.Object3D;
+    public allCubeRoots!: THREE.Object3D[];
     private fullGrid!: Cube[][];
     private yearGrids!: Cube[][];
     private displayType!: CraftDisplayType;
@@ -50,6 +51,7 @@ export class DougsCraft {
         this.gridRoot.position.set(0, DougsCraft.gridBaseHeight, 0);
 
         this.fullGrid = []; 
+        this.allCubeRoots = []; 
         this.yearGrids = [[], [], [], [], [], [], [], [], []]; 
         for (let i = 0; i < DougsCraft.gridWidth; i++) {
             const line = new Array();
@@ -82,6 +84,7 @@ export class DougsCraft {
                 const cube = new Cube(this, yearIndex > 0);
                 this.gridRoot.add(cube.root);
                 line.push(cube);
+                this.allCubeRoots.push(cube.root);
 
                 cube.setRootName('cube_' + i + '_' + j);
                 
@@ -97,6 +100,13 @@ export class DougsCraft {
                                     
             }
         }
+    }
+
+    public getCubeByName(name: string) : Cube | null {
+        var parts = name.split('_');
+        if (parts.length !== 3 || parts[0] !== 'cube')
+            return null;
+        return this.fullGrid[parseInt(parts[1])][parseInt(parts[2])];
     }
 
     public setDisplayType(type: CraftDisplayType) {
