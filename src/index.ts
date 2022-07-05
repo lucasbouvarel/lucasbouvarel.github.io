@@ -9,11 +9,44 @@ $<HTMLInputElement>(':file').on('change', function () {
         return;
     }
 
-    var file = this.files[0];
+    parseCsv(this.files);
+});
+
+function parseCsv(files: FileList): void {
+    $('.upload-box').hide();
+
+    var file = files[0];
 
     file.text()
         .then(CsvParser.parse)
         .then((lines) => console.log(lines));
+}
+
+$('.upload-box').on('dragover', function (event) {
+    event.preventDefault();
+    event.stopPropagation();
+    $(this).addClass('dragging');
+});
+
+$('.upload-box').on('dragleave', function (event) {
+    event.preventDefault();
+    event.stopPropagation();
+    $(this).removeClass('dragging');
+});
+
+$('.upload-box').on('drop', function (event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (!event.originalEvent?.dataTransfer?.files?.length) {
+        return;
+    }
+
+    parseCsv(event.originalEvent?.dataTransfer?.files);
+});
+
+$('.upload-box').on('click', function (event) {
+    $(':file').trigger('click');
 });
 
 async function bootstrap(): Promise<void> {
