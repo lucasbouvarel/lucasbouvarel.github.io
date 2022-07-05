@@ -23,6 +23,7 @@ export class Cube {
     static disabledSize = 0.1;
 
     root!: THREE.Object3D;
+    cube!: THREE.Mesh;
     material!: THREE.MeshStandardMaterial;
     currentTween: TWEEN.Tween<any> | null = null;
     size!: number;
@@ -32,6 +33,7 @@ export class Cube {
     hasYearColor = false;
     x!: number;
     y!: number;
+    isSelected = false;
 
     constructor(private readonly parentCraft: DougsCraft, isYearCube: boolean) {
         this.isYear = isYearCube;
@@ -40,23 +42,21 @@ export class Cube {
         this.colorIndex = Cube.getRandomColorIndex();
         this.material = new THREE.MeshStandardMaterial({ color: availableColors[this.colorIndex], metalness: 0.6, wireframe : false });
         const geometry = new THREE.BoxGeometry(Cube.defaultSize, Cube.defaultSize, Cube.defaultSize);
-        const cube = new THREE.Mesh(geometry, this.material);
-        cube.position.set(0, Cube.defaultSize / 2, 0);
-        this.root.add(cube);
+        this.cube = new THREE.Mesh(geometry, this.material);
+        this.cube.position.set(0, Cube.defaultSize / 2, 0);
+        this.root.add(this.cube);
 
         this.setSize(Cube.disabledSize, false);
-        
-        /*
-        if (enableDemo) {
-            this.autoAnim = enableDemo;
-            this.setSize(2, true, 400);
-        }
-        */
     }
 
     public setCoord(cX: number, cY: number): void {
         this.x = cX;
         this.y = cY;
+    }
+
+    public traceData() {
+        if (this.isYear && this.size !== Cube.disabledSize)
+            console.log('size: ' + Math.floor(this.size));
     }
 
     public isActive(): boolean {
@@ -66,9 +66,20 @@ export class Cube {
         }
     }
 
+    setOverColor(): void {
+        this.isSelected = true;
+        this.material.color.setHex(availableOverColors[this.colorIndex]);
+    }
+
+    restoreColor(): void {
+        this.isSelected = false;
+        this.material.color.setHex(this.hasYearColor ? availableYearColors[this.colorIndex] : availableColors[this.colorIndex]);
+        
+    }
+
 
     public setRootName(name: string): void {
-        this.root.name = name;
+        this.cube.name = name;
     }
 
     public setPosition(x: number, y: number, z: number) {
