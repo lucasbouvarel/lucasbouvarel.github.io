@@ -3,7 +3,7 @@ import { OrbitControls } from '@three-ts/orbit-controls';
 import { Grid } from './grid';
 import * as THREE from 'three';
 import { Cube } from './cube';
-import { DougsCraft } from './dougsCraft';
+import { CraftDisplayType, DougsCraft } from './dougsCraft';
 
 
 
@@ -64,9 +64,19 @@ export class Stage {
 
     initControls() {
         document.addEventListener('keydown', (event) => {
-            console.log('code : ' + event.code);
+            //console.log('code : ' + event.code);
             if (event.code === 'Space')
-                this.dougsCraft.switchDisplayType();
+                this.dougsCraft.setDisplayType(CraftDisplayType.Wtf);
+            if (event.code === 'Digit1')
+                this.dougsCraft.setDisplayType(CraftDisplayType.Year_1);
+                if (event.code === 'Digit2')
+                this.dougsCraft.setDisplayType(CraftDisplayType.Year_2);
+                if (event.code === 'Digit3')
+                this.dougsCraft.setDisplayType(CraftDisplayType.Year_3);
+                if (event.code === 'Digit4')
+                this.dougsCraft.setDisplayType(CraftDisplayType.Year_4);
+                if (event.code === 'Digit5')
+                this.dougsCraft.setDisplayType(CraftDisplayType.Year_5);
             if (event.code === 'KeyR') {
                 this.controls.autoRotate = !this.controls.autoRotate;
                 this.controls.update();

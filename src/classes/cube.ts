@@ -30,6 +30,8 @@ export class Cube {
     isYear = false;
     colorIndex!: number;
     hasYearColor = false;
+    x!: number;
+    y!: number;
 
     constructor(private readonly parentCraft: DougsCraft, isYearCube: boolean) {
         this.isYear = isYearCube;
@@ -52,10 +54,15 @@ export class Cube {
         */
     }
 
+    public setCoord(cX: number, cY: number): void {
+        this.x = cX;
+        this.y = cY;
+    }
+
     public isActive(): boolean {
         switch(this.parentCraft.getDisplayType()) {
             case CraftDisplayType.Wtf : return true;
-            case CraftDisplayType.Year : return this.isYear;
+            default : return this.isYear;
         }
     }
 
