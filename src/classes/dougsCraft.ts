@@ -24,7 +24,8 @@ export class DougsCraft {
     private fullGrid!: Cube[][];
     private yearGrids!: Cube[][];
     private displayType!: CraftDisplayType;
-
+    public data: any = [];
+    private yearData: any[][] = [];
     constructor() {
         this.root = new THREE.Object3D(); 
         this.root.rotation.y = 5 * Math.PI / 4;
@@ -140,8 +141,17 @@ export class DougsCraft {
         }
     }
 
-    public setData(data: any) { 
-        //TODO
+    public setData(data: any) {
+        this.data = data;
+        const chunkSize = 365;
+        let j = 0;
+        const maxChunk = Math.round(this.data.length / chunkSize) - 1;
+        for (let i = 0; i < this.data.length; i += chunkSize) {
+            const chunk = this.data.slice(i, i + chunkSize);
+            this.yearData[maxChunk - j] = chunk;
+            j++;
+        }
+        this.setDisplayType(CraftDisplayType.Year_5);
     }
 
     private getYearGridsByDisplay(type: CraftDisplayType): Cube[][] {
@@ -162,12 +172,17 @@ export class DougsCraft {
 
         const yearGrids = this.getYearGridsByDisplay(this.displayType);
 
-        yearGrids.forEach(grid => {
+        yearGrids.forEach((grid, index) => {
             let delay = 100;
             const deltaDelay = 6 + Math.random() * 4;
-            grid.forEach(cube => {
+            const yearData: any[] = this.yearData[index];
+            grid.forEach((cube, idx) => {
                 delay += deltaDelay;
-                cube.setSize(Cube.getRandomSize(), true, delay, ColorSwitch.Year);
+                let value: number = (yearData[idx]?.count && parseInt(yearData[idx].count, 10) / 100) ?? 0;
+                if (value > 15) {
+                    value = 15;
+                }
+                cube.setSize(value, true, delay, ColorSwitch.Year);
             });
         });
         //#######################
