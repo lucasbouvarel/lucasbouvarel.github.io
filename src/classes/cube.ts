@@ -3,7 +3,10 @@ import * as TWEEN  from '@tweenjs/tween.js'
 import { DougsCraft, CraftDisplayType } from './dougsCraft';
 
 
-const availableColors = [0x275F73, 0x9CDDF4, 0x52C8F2, 0x1D5E75, 0x41A0BF];
+const availableColors = [0x3D93B3, 0x296378, 0x52C8F2, 0x57D2FF, 0x4AB3D9]; //blue
+//const availableColors = [0x964808, 0x5C2C05, 0x6660B, 0xE36C0B, 0xBD5A09]; //orange
+//const availableColors = [0xB38900, 0x785C00, 0xF2BA00, 0xFFC300, 0xDBA701]; //yellow/green
+const availableOverColors = [0x8512B3, 0x590C78, 0xB418F2, 0xC019FF, 0xA716DB]; //purple 
 
 
 export class Cube {
@@ -19,11 +22,14 @@ export class Cube {
     size!: number;
     autoAnim = false;
     isYear = false;
+    colorIndex!: number;
 
     constructor(private readonly parentCraft: DougsCraft, isYearCube: boolean) {
         this.isYear = isYearCube;
         this.root = new THREE.Object3D(); 
-        this.material = new THREE.MeshStandardMaterial({ color: Cube.getRandomColor(), metalness: 0.6, wireframe : false });
+
+        this.colorIndex = Cube.getRandomColorIndex();
+        this.material = new THREE.MeshStandardMaterial({ color: availableColors[this.colorIndex], metalness: 0.6, wireframe : false });
         const geometry = new THREE.BoxGeometry(Cube.defaultSize, Cube.defaultSize, Cube.defaultSize);
         const cube = new THREE.Mesh(geometry, this.material);
         cube.position.set(0, Cube.defaultSize / 2, 0);
@@ -109,8 +115,12 @@ export class Cube {
     }
  
 
+    static getRandomColorIndex() {
+        return Math.floor(Math.random() * availableColors.length);
+    }
+
     static getRandomColor() {
-        return availableColors[Math.floor(Math.random() * availableColors.length)];
+        return availableColors[Cube.getRandomColorIndex()];
     }
 
     static getRandomSize() {

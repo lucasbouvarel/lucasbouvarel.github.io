@@ -64,9 +64,13 @@ export class Stage {
 
     initControls() {
         document.addEventListener('keydown', (event) => {
-            //console.log('code : ' + event.code);
+            console.log('code : ' + event.code);
             if (event.code === 'Space')
                 this.dougsCraft.switchDisplayType();
+            if (event.code === 'KeyR') {
+                this.controls.autoRotate = !this.controls.autoRotate;
+                this.controls.update();
+            }
         }, false);
     }
 
