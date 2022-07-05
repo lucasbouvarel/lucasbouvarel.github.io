@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 import * as TWEEN  from '@tweenjs/tween.js'
-import { Cube } from './cube';
+import { Cube, ColorSwitch } from './cube';
 
 export enum CraftDisplayType {
     Year,
@@ -107,7 +107,7 @@ export class DougsCraft {
 
     private resetAllCubes(onEnd?: () => void): void {
         let found = false;
-        this.fullGrid.forEach(line => line.forEach(cube => found = cube.setSize(Cube.disabledSize, true, Math.random() * 10, onEnd) || found));
+        this.fullGrid.forEach(line => line.forEach(cube => found = cube.setSize(Cube.disabledSize, true, Math.random() * 10, ColorSwitch.Standard, onEnd) || found));
         if (!found && onEnd != null) {
             onEnd();
         }
@@ -137,7 +137,7 @@ export class DougsCraft {
         const deltaDelay = 6 + Math.random() * 4;
         this.yearGrid.forEach(cube => {
             delay += deltaDelay;
-            cube.setSize(Cube.getRandomSize(), true, delay);
+            cube.setSize(Cube.getRandomSize(), true, delay, ColorSwitch.Year);
         });
         //#######################
 

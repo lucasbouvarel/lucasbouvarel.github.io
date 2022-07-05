@@ -3,10 +3,16 @@ import * as TWEEN  from '@tweenjs/tween.js'
 import { DougsCraft, CraftDisplayType } from './dougsCraft';
 
 
+export enum ColorSwitch {
+    None,
+    Standard,
+    Year
+}
+
 const availableColors = [0x3D93B3, 0x296378, 0x52C8F2, 0x57D2FF, 0x4AB3D9]; //blue
 //const availableColors = [0x964808, 0x5C2C05, 0x6660B, 0xE36C0B, 0xBD5A09]; //orange
-//const availableColors = [0xB38900, 0x785C00, 0xF2BA00, 0xFFC300, 0xDBA701]; //yellow/green
-const availableOverColors = [0x8512B3, 0x590C78, 0xB418F2, 0xC019FF, 0xA716DB]; //purple 
+const availableOverColors = [0xB38900, 0x785C00, 0xF2BA00, 0xFFC300, 0xDBA701]; //yellow/green
+const availableYearColors = [0x8512B3, 0x590C78, 0xB418F2, 0xC019FF, 0xA716DB]; //purple 
 
 
 export class Cube {
@@ -23,6 +29,7 @@ export class Cube {
     autoAnim = false;
     isYear = false;
     colorIndex!: number;
+    hasYearColor = false;
 
     constructor(private readonly parentCraft: DougsCraft, isYearCube: boolean) {
         this.isYear = isYearCube;
@@ -71,18 +78,19 @@ export class Cube {
         this.autoAnim = false;
     }
 
-    public setSize(size: number, withAnim = true, withDelay = 0, onEnd?: () => void): boolean {
+    public setSize(size: number, withAnim = true, withDelay = 0, colorSwitch: ColorSwitch = ColorSwitch.None, onEnd?: () => void): boolean {
         this.size = size;
         if (!withAnim) {
             this.root.scale.y = this.size;
+            this.updateColor(colorSwitch);
             return true;
         } else {
-            return this.animSize(withDelay, onEnd);
+            return this.animSize(withDelay, colorSwitch, onEnd);
         }
     }
 
 
-    private animSize(withDelay = 0, onEnd?: () => void): boolean {
+    private animSize(withDelay = 0, colorSwitch: ColorSwitch = ColorSwitch.None, onEnd?: () => void): boolean {
         this.killCurrentTween();
         if (this.root.scale.y === this.size) return false; //nothing to do
 
@@ -95,6 +103,7 @@ export class Cube {
         .delay(withDelay)
         .easing(isUp ? TWEEN.Easing.Elastic.Out : TWEEN.Easing.Back.In)
         .start()
+        .onStart(() => this.updateColor(colorSwitch))
         .onComplete(() => {
             this.killCurrentTween();
             if (onEnd != null) {
@@ -105,6 +114,22 @@ export class Cube {
         });
         Cube.addToActiveTweens(this.currentTween);
         return true;
+    }
+
+    private updateColor(colorSwitch: ColorSwitch) {
+        switch(colorSwitch) {
+            case ColorSwitch.None: return;
+            case ColorSwitch.Standard: 
+                if (!this.hasYearColor) return;
+                this.material.color.setHex(availableColors[this.colorIndex]);
+                this.hasYearColor = false;
+                break;
+            case ColorSwitch.Year: 
+            if (this.hasYearColor) return;
+                this.material.color.setHex(availableYearColors[this.colorIndex]);
+                this.hasYearColor = true;
+                break;
+        }
     }
 
     public killCurrentTween(): void {
